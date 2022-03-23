@@ -1,3 +1,7 @@
+/*
+ @author Enes Ay, Fatih Eroglu
+ @date 23.03.2022
+ */
 namespace ooplab1
 {
     public partial class Form1 : Form
@@ -17,9 +21,9 @@ namespace ooplab1
             groupBox2.Hide();
             label8.Hide();
             groupBox3.Hide();
-            if (File.Exists("demo.txt"))
+            if (File.Exists("settings.txt"))
             {
-                string[] lines = System.IO.File.ReadAllLines("demo.txt");
+                string[] lines = System.IO.File.ReadAllLines("settings.txt");
                 comboBox1.SelectedIndex = int.Parse(lines[0]);
                 if (lines[0] == "3")
                 {
@@ -99,13 +103,13 @@ namespace ooplab1
         {
             if(checkBox1.Checked|| checkBox2.Checked || checkBox3.Checked || checkBox4.Checked)
             {
-                txt = new StreamWriter("demo.txt");
+                txt = new StreamWriter("settings.txt");
                 if (dif == 3)
                 {
                     x = int.Parse(textBox3.Text);
                     y = int.Parse(textBox4.Text);
 
-                    txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y);
+                    txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked);
                 }
                 else
                     txt.Write(dif + System.Environment.NewLine + "" + System.Environment.NewLine + "" + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked);
@@ -132,11 +136,7 @@ namespace ooplab1
 
         }
 
-        private void label9_Click(object sender, EventArgs e)
-        {
-
-        }
-
+ 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBox2.Checked)
