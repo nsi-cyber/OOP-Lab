@@ -1,6 +1,7 @@
 /*
  @author Enes Ay, Fatih Eroglu
  @date 23.03.2022
+downgrade to net 5
  */
 namespace ooplab1
 {
