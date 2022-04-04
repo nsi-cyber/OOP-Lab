@@ -68,20 +68,19 @@ namespace ooplab1
             }
         }
 
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !(char.IsLetter(e.KeyChar) || e.KeyChar == (char)Keys.Back);
+        }
+
         private void checkBox5_CheckedChanged(object sender, EventArgs e)
         {
             textBox2.PasswordChar = '*';
-            if (checkBox1.Checked) textBox2.PasswordChar = '\0';
-            else textBox2.PasswordChar = '*';
+            if (checkBox1.Checked) { textBox2.PasswordChar = '\0'; }
+            else { textBox2.PasswordChar = '*'; }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            if (!System.Text.RegularExpressions.Regex.IsMatch(textBox1.Text, "^[a-zA-Z ]"))
-            {
-                textBox1.Text.Remove(textBox1.Text.Length - 1);
-            }
-        }
+    
 
         private void button1_Click(object sender, EventArgs e)
         {
