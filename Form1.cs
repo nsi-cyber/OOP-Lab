@@ -73,10 +73,16 @@ namespace ooplab1
             e.Handled = !(char.IsLetter(e.KeyChar) || e.KeyChar == (char)Keys.Back);
         }
 
+        private void checkBox5_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (checkBox5.Checked) { textBox2.PasswordChar = '\0'; }
+            else { textBox2.PasswordChar = '*'; }
+        }
+
         private void checkBox5_CheckedChanged(object sender, EventArgs e)
         {
-            textBox2.PasswordChar = '*';
-            if (checkBox1.Checked) { textBox2.PasswordChar = '\0'; }
+         
+            if (checkBox5.Checked) { textBox2.PasswordChar = '\0'; }
             else { textBox2.PasswordChar = '*'; }
         }
 

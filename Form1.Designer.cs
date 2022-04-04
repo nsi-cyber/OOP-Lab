@@ -101,7 +101,6 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(159, 27);
             this.textBox1.TabIndex = 4;
-           // this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
             // textBox2
@@ -137,13 +136,14 @@
             this.checkBox5.Text = "Show Pass";
             this.checkBox5.UseVisualStyleBackColor = true;
             this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
+            this.checkBox5.CheckStateChanged += new System.EventHandler(this.checkBox5_CheckStateChanged);
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.groupBox3);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(130, 212);
+            this.groupBox2.Location = new System.Drawing.Point(12, 183);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(782, 428);
             this.groupBox2.TabIndex = 7;
