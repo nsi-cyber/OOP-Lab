@@ -3,10 +3,13 @@
  @date 23.03.2022
 downgrade to net 5
  */
+using System.Xml.Serialization;
+
 namespace ooplab1
 {
     public partial class Form1 : Form
     {
+        bool isAdmin = false;
         String[] usr = { "user", "admin" };
         String[] pass = { "user", "admin" };
         TextWriter txt,txtx;
@@ -14,58 +17,63 @@ namespace ooplab1
         int dif;
         int x, y;
         int color;
+        int actv;
         public static string lastUser;
-
+        List<UserBase> list = new List<UserBase>();
+        XmlSerializer srl = new XmlSerializer(typeof(List<UserBase>));
         public Form1()
         {
             InitializeComponent();
             textBox1.Select();
             label3.Hide();
+            label5.Hide();
             groupBox2.Hide();
-            label8.Hide();
-            groupBox3.Hide();
-            if (File.Exists("lastuser.txt"))
+            try
+            {
+                using (FileStream fsr = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Read))
+                {
+
+                    list = srl.Deserialize(fsr) as List<UserBase>;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                list.Add(new UserBase() { username = "admin", password = SHA512("admin") });
+                using (FileStream fsw = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Create, FileAccess.Write))
+                {
+
+                    srl.Serialize(fsw, list);
+                }
+            }
+            /*
+
+            list.Add(new UserBase() { username = "admin", password = SHA512("admin") });
+            using (FileStream fsw = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Create, FileAccess.Write))
+            {
+
+                srl.Serialize(fsw, list);
+            }
+            
+              */
+
+
+
+
+
+
+                if (File.Exists("lastuser.txt"))
             {
                 string[] lines = System.IO.File.ReadAllLines("lastuser.txt");
                 textBox1.Text= lines[0];
             }
-                if (File.Exists("settings.txt"))
-            {
-                string[] lines = System.IO.File.ReadAllLines("settings.txt");
-                comboBox1.SelectedIndex = int.Parse(lines[0]);
-                comboBox2.SelectedIndex = int.Parse(lines[7]);
-                if (lines[0] == "3")
-                {
-                    dif = int.Parse(lines[0]);
-                    x = int.Parse(lines[1]);
-                    y = int.Parse(lines[2]);
-                    textBox3.Text = "3";
-                    textBox4.Text = "4";
-                    square = bool.Parse(lines[3]);
-                    triangle = bool.Parse(lines[4]);
-                    circle = bool.Parse(lines[5]);
-                    hexagon = bool.Parse(lines[6]);
-                    color= int.Parse(lines[7]);
-                    checkBox1.Checked = square;
-                    checkBox2.Checked = triangle;
-                    checkBox3.Checked = circle;
-                    checkBox4.Checked = hexagon;
-                }
-                else
-                {
-                    dif = int.Parse(lines[0]);
+               
+        }
 
-                    square = bool.Parse(lines[3]);
-                    triangle = bool.Parse(lines[4]);
-                    circle = bool.Parse(lines[5]);
-                    hexagon = bool.Parse(lines[6]);
-                    color = int.Parse(lines[7]);
-                    checkBox1.Checked = square;
-                    checkBox2.Checked = triangle;
-                    checkBox3.Checked = circle;
-                    checkBox4.Checked = hexagon;
-                }
-            }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            signup form = new signup();
+            form.Show();
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -73,10 +81,22 @@ namespace ooplab1
             e.Handled = !(char.IsLetter(e.KeyChar) || e.KeyChar == (char)Keys.Back);
         }
 
+        private void label5_Click(object sender, EventArgs e)
+        {
+            Panel f=new Panel();
+            f.Show();
+        }
+
         private void checkBox5_CheckStateChanged(object sender, EventArgs e)
         {
             if (checkBox5.Checked) { textBox2.PasswordChar = '\0'; }
             else { textBox2.PasswordChar = '*'; }
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+            profile prf=new profile();
+            prf.Show();
         }
 
         private void checkBox5_CheckedChanged(object sender, EventArgs e)
@@ -86,178 +106,116 @@ namespace ooplab1
             else { textBox2.PasswordChar = '*'; }
         }
 
-    
+
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if ((textBox1.Text == usr[0] && textBox2.Text == pass[0]) || (textBox1.Text == usr[1] && textBox2.Text == pass[1]))
+            using (FileStream fsr = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Read))
             {
-                groupBox2.Show();
-                lastUser = textBox1.Text;
-                txtx = new StreamWriter("lastuser.txt");
-                txtx.Write(lastUser);
-                txtx.Close();
-            }
-            else
-                label3.Show();
-        }
 
-        
-
-        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
-        {
-            label5.Hide();
-            label6.Hide();
-            textBox3.Hide();
-            textBox4.Hide();
-            switch (comboBox1.SelectedIndex)
-            {
-                case 0:
-                    dif = 0;
-                    break;
-                case 1:
-                  dif=1;
-                    break;
-                case 2:
-                   dif=2;
-                    break;
-                case 3:
-                    dif=3;
-                   label5.Show();
-                    label6.Show();
-                    textBox3.Show();
-                    textBox4.Show();
-
-
-                    break;
-                
-            }
-        }
-
-
-
-        private void comboBox2_SelectedValueChanged(object sender, EventArgs e)
-        {
-            
-            switch (comboBox2.SelectedIndex)
-            {
-                case 0:
-                    dif = 0;
-                    break;
-                case 1:
-                    dif = 1;
-                    break;
-                case 2:
-                    dif = 2;
-                    break;
+                list = srl.Deserialize(fsr) as List<UserBase>;
 
             }
-        }
 
 
-
-        /*
-
-
-
-
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            if(checkBox1.Checked|| checkBox2.Checked || checkBox3.Checked || checkBox4.Checked)
+            bool a = true;
+            int i = 0;
+            for (i = 0; i < list.Count; i++)
             {
-                txt = new StreamWriter("settings.txt");
-                if (dif == 3)
+                if (list[i].username == textBox1.Text && list[i].password == SHA512(textBox2.Text))
                 {
-                    x = int.Parse(textBox3.Text);
-                    y = int.Parse(textBox4.Text);
+                    if (list[i].username == "admin")
+                    {
 
-                    txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked+System.Environment.NewLine + color);
+                        isAdmin = true;
+                        label5.Show();
+
+                    }
+                    groupBox2.Show();
+                    lastUser = textBox1.Text;
+                    txtx = new StreamWriter("lastuser.txt");
+                    txtx.Write(lastUser);
+                    txtx.Close();
+                    actv = i;
+                    txtx = new StreamWriter("actv.txt");
+                    txtx.Write(i);
+                    txtx.Close();
+                    break;
+
                 }
-                else
-                    txt.Write(dif + System.Environment.NewLine + "" + System.Environment.NewLine + "" + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked+System.Environment.NewLine + color);
+                if (!a) label3.Show();
 
-                txt.Close();
-                label7.Show();
-                label8.Hide();
-            }
-            else
-            {
-                label8.Show();
             }
 
         }
 
-       
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox1.Checked)
-                square = true;
-            else
-                square = false;
-
-        }
-
-        
-
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox2.Checked)
-                triangle = true;
-            else
-                triangle = false;
-
-        }
-
-        private void checkBox3_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox3.Checked)
-                circle = true;
-            else
-                circle = false;
-
-        }
-
-
-        private void checkBox4_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox4.Checked)
-                hexagon = true;
-            else
-                hexagon = false;
-
-        }
-
-        */
+     
         private void label4_Click(object sender, EventArgs e)
         {
 
             Form2 form=new Form2();
+            form.TopMost = true;
             form.Show();
          
-                label7.Hide();
-                label5.Hide();
-                label6.Hide();
+               
+           
 
-                textBox3.Hide();
-                textBox4.Hide();/*
-                label4.Text = "Close Settings";
-                if (dif == 3)
-                {
-                    label5.Show();
-                    label6.Show();
-                    textBox3.Show();
-                    textBox4.Show();
-                }
-            }
-            else
-            {
-                groupBox3.Hide();
-                label4.Text = "Settings";
-            }
-
-            */
+           
         }
+
+
+
+        public static string SHA512(string input)
+        {
+            var bytes = System.Text.Encoding.UTF8.GetBytes(input);
+            using (var hash = System.Security.Cryptography.SHA512.Create())
+            {
+                var hashedInputBytes = hash.ComputeHash(bytes);
+
+                // Convert to text
+                // StringBuilder Capacity is 128, because 512 bits / 8 bits in byte * 2 symbols for byte 
+                var hashedInputStringBuilder = new System.Text.StringBuilder(128);
+                foreach (var b in hashedInputBytes)
+                    hashedInputStringBuilder.Append(b.ToString("X2"));
+                return hashedInputStringBuilder.ToString();
+            }
+        }
+
+
+        public static bool IsTextFileEmpty(string fileName)
+        {
+            var info = new FileInfo(fileName);
+            if (info.Length == 0)
+                return true;
+
+            // only if your use case can involve files with 1 or a few bytes of content.
+            if (info.Length < 6)
+            {
+                var content = File.ReadAllText(fileName);
+                return content.Length == 0;
+            }
+            return false;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

@@ -17,7 +17,7 @@ namespace ooplab1
         int dif;
         int x, y;
         int color;
-        string lastuser;
+        
         public Form2()
         {
             InitializeComponent();
@@ -84,8 +84,15 @@ namespace ooplab1
                 txt = new StreamWriter("settings.txt");
                 if (dif == 3)
                 {
-                    x = int.Parse(textBox3.Text);
-                    y = int.Parse(textBox4.Text);
+                    try
+                    {
+                        x = int.Parse(textBox3.Text);
+                        y = int.Parse(textBox4.Text);
+                    }
+                    catch (Exception ex) { }
+
+
+
 
                     txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked + System.Environment.NewLine + color);
                 }
@@ -100,8 +107,9 @@ namespace ooplab1
             {
                 label8.Show();
             }
-
         }
+
+        
 
 
 
@@ -155,12 +163,15 @@ namespace ooplab1
             }
         }
 
-        private void Form2_Load(object sender, EventArgs e)
+        private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            lastuser = Form1.lastUser;
+            e.Handled = (char.IsLetter(e.KeyChar) || e.KeyChar == (char)Keys.Back);
         }
 
-    
+        private void textBox4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = (char.IsLetter(e.KeyChar) || e.KeyChar == (char)Keys.Back);
+        }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
