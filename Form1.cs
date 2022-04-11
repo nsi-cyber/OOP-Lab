@@ -99,6 +99,12 @@ namespace ooplab1
             prf.Show();
         }
 
+        private void label7_Click(object sender, EventArgs e)
+        {
+            info a=new info();
+            a.ShowDialog();
+        }
+
         private void checkBox5_CheckedChanged(object sender, EventArgs e)
         {
          
