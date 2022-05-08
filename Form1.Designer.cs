@@ -38,6 +38,10 @@
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
@@ -122,7 +126,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(94, 29);
             this.button2.TabIndex = 19;
-            this.button2.Text = "button2";
+            this.button2.Text = "sing in";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -140,17 +144,56 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button3);
+            this.groupBox2.Controls.Add(this.label10);
+            this.groupBox2.Controls.Add(this.label8);
+            this.groupBox2.Controls.Add(this.panel1);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(12, 3);
+            this.groupBox2.Location = new System.Drawing.Point(3, 1);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(782, 428);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Game Screen";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(651, 200);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(94, 29);
+            this.button3.TabIndex = 12;
+            this.button3.Text = "refresh";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(556, 6);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(17, 20);
+            this.label10.TabIndex = 11;
+            this.label10.Text = "0";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(500, 6);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(44, 20);
+            this.label8.TabIndex = 10;
+            this.label8.Text = "score";
+            // 
+            // panel1
+            // 
+            this.panel1.Location = new System.Drawing.Point(6, 23);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(639, 387);
+            this.panel1.TabIndex = 9;
             // 
             // label7
             // 
@@ -236,5 +279,9 @@
         private Label label5;
         private Label label6;
         private Label label7;
+        private System.Windows.Forms.Panel panel1;
+        private Label label10;
+        private Label label8;
+        private Button button3;
     }
 }
