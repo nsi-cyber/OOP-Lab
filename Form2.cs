@@ -29,6 +29,9 @@ namespace ooplab1
 
             textBox3.Hide();
             textBox4.Hide();
+
+
+
             if (File.Exists("settings.txt"))
             {
                 string[] lines = System.IO.File.ReadAllLines("settings.txt");
@@ -39,8 +42,8 @@ namespace ooplab1
                     dif = int.Parse(lines[0]);
                     x = int.Parse(lines[1]);
                     y = int.Parse(lines[2]);
-                    textBox3.Text = "3";
-                    textBox4.Text = "4";
+                    textBox3.Text = x.ToString();
+                    textBox4.Text = y.ToString();
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
@@ -54,7 +57,22 @@ namespace ooplab1
                 else
                 {
                     dif = int.Parse(lines[0]);
-
+                    switch (lines[0] ){
+                        case "0":
+                            x = 15;
+                            y = 15;
+                            break;
+                          case "1":
+                            x = 9;
+                            y = 9;
+                            break;
+                        case "2":
+                            x = 6;
+                            y = 6;
+                            break;
+                    }
+                    textBox3.Text = x.ToString();
+                    textBox4.Text = y.ToString();
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
@@ -97,11 +115,12 @@ namespace ooplab1
                     txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked + System.Environment.NewLine + color);
                 }
                 else
-                    txt.Write(dif + System.Environment.NewLine + "" + System.Environment.NewLine + "" + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked + System.Environment.NewLine + color);
-
-                txt.Close();
+                    txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked + System.Environment.NewLine + color);
+            
+            txt.Close();
                 label7.Show();
                 label8.Hide();
+                
             }
             else
             {
