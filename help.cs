@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace ooplab1
 {
-    public partial class info : Form
+    public partial class help : Form
     {
-        public info()
+        public help()
         {
             InitializeComponent();
         }
@@ -20,6 +20,12 @@ namespace ooplab1
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            info a = new info();
+            a.ShowDialog();
         }
     }
 }

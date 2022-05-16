@@ -589,7 +589,7 @@ namespace ooplab1
 
             // Mark the source cell as visited
             visited[src.X, src.Y] = true;
-
+            road= new Queue<queueNode>();
             // Create a queue for BFS
             Queue<queueNode> q = new Queue<queueNode>();
             //queue olustur ve onun elemanlari cek
@@ -711,6 +711,14 @@ namespace ooplab1
             gameArr = new string[x, y];
             gameArrInt = new int[x, y];
             gameStart();
+        }
+
+        private void label11_Click(object sender, EventArgs e)
+        {
+           
+                help a = new help();
+                a.ShowDialog();
+           
         }
 
         public void ShowAns( string[,] arr, int[,] arrint)
