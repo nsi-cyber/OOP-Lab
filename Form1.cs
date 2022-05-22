@@ -1,9 +1,15 @@
 /*
- @author Enes Ay, Fatih Eroglu
+ @author Enes Ay
  @date 23.03.2022
 downgrade to net 5
- */
+ */ using System;
 using System.Xml.Serialization;
+using System.Data;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
+
+
+
 
 namespace ooplab1
 {
@@ -27,6 +33,8 @@ namespace ooplab1
         XmlSerializer srl = new XmlSerializer(typeof(List<UserBase>));
         string[,] gameArr;
         int[,] gameArrInt ;
+        int thisuserscore;
+        int highscore=0;
         public Form1()
         {
 
@@ -35,10 +43,21 @@ namespace ooplab1
             label3.Hide();
             label5.Hide();
             groupBox2.Hide();
-            
+
+            System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"c:\mywavfile.wav");
+            System.Media.SoundPlayer pointSound = new System.Media.SoundPlayer(@"c:\mywavfile.wav");
+
+
+            /*
+            SqlConnection con = new SqlConnection("Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = C:\Users\nsi\Documents\MSI.mdf; Integrated Security = True; Connect Timeout = 30");
+            SqlCommand cmd= con.CreateCommand();
+            */
+
 
 
             if (File.Exists("settings.txt"))
+
+
             {
                 string[] lines = System.IO.File.ReadAllLines("settings.txt");
 
@@ -119,9 +138,13 @@ namespace ooplab1
               */
 
 
+            for (int i = 0; i < list.Count; i++)
+            { 
+                if(highscore<list[i].highscore)
+                    highscore = list[i].highscore;
+            }
 
-
-
+            label13.Text = "" + highscore;
 
             if (File.Exists("lastuser.txt"))
             {
@@ -211,6 +234,9 @@ namespace ooplab1
 
                         isAdmin = true;
                         label5.Show();
+
+                        label14.Show();
+
 
                     }
                     groupBox2.Show();
@@ -446,11 +472,12 @@ namespace ooplab1
                     }
                     else
                     {
-                        // ShowAns(gameArr, gameArrInt);
-
+                        System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer("moveSound.wav");
+                        moveSound.Play();
                         gameArr[sdd, aw] = movShape;
                         gameArrInt[sdd, aw] = 1;
-                        puanCheck(sdd, aw);//bi error var
+                      // ShowAns(gameArr, gameArrInt);
+                        puanCheck(sdd, aw);
                         
                         randomYerlestir(gameArr, gameArrInt);
                         nextMap(x * y, gameArr);
@@ -460,24 +487,61 @@ namespace ooplab1
 
 
             }
+
+            if (!yerVar(gameArrInt)) {
+                MessageBox.Show("Game End - Score: "+ label10.Text);
+                blockEvery();
+                thisuserscore = Int32.Parse(label10.Text);
+                //lookat
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i].username == textBox1.Text) {
+                        list[i].highscore = thisuserscore;
+                    }
+                    using (FileStream fs = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Write))
+                    {
+                        srl.Serialize(fs, list);
+                    }
+
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            }
+
         }
         public void randomYerlestir(string[,] arr, int[,] arrint)
         {
             string a;
             int rX;
             int rY;
-            int shape;
+            int shape; 
             Random rnd = new Random();
-            if(yerVar(arrint)){ 
+            if(yerVar(arrint)){
 
-            for (int i = 0; i < 3; i++)
-            {
-                rX = rnd.Next(0, x);
-                rY = rnd.Next(0, y);
-                shape = rnd.Next(0, 3);
-                   
-                while (true)
+                for (int i = 0; i < 3; i++)
                 {
+                    rX = rnd.Next(0, x);
+                    rY = rnd.Next(0, y);
+                    shape = rnd.Next(0, 3);
+                    //stay
+                    while (true)
+                    {
                         if (0 == arrint[rX, rY])
                             break;
                         else
@@ -485,28 +549,93 @@ namespace ooplab1
                             rX = rnd.Next(0, x);
                             rY = rnd.Next(0, y);
                         }
-                }
+                    }
+                    //
 
-                switch (shape)
-                {
-                    case 0:
-                        //triangle
-                        arr[rX, rY] = "triangle";
-                        break;
-                    case 1:
-                        //circle
-                        arr[rX, rY] = "circle";
-                        break;
-                    case 2:
-                        //square
-                        arr[rX, rY] = "square";
-                        break;
-                }
+                    if (square && !triangle && !circle)
+                    { arr[rX, rY] = "square"; }
+                    else if (!square && triangle && !circle) { arr[rX, rY] = "triangle"; }
+                    else if (!square && !triangle && circle) { arr[rX, rY] = "circle"; }
+                    else if (square && !triangle && circle) {
+                        shape = rnd.Next(0, 2);
+
+                        switch (shape)
+                        {
+                            case 0:
+                                //triangle
+                                arr[rX, rY] = "square";
+                                break;
+                            case 1:
+                                //circle
+                                arr[rX, rY] = "circle";
+                                break;
+                            
+                        }
+
+
+
+
+                    }
+                      
+                    else if (square && triangle && !circle) {
+                        shape = rnd.Next(0, 2);
+
+                        switch (shape)
+                        {
+                            case 0:
+                                //triangle
+                                arr[rX, rY] = "square";
+                                break;
+                            case 1:
+                                //circle
+                                arr[rX, rY] = "triangle";
+                                break;
+
+                        }
+                    }
+                    else if (!square && triangle && circle)
+                    {
+                        shape = rnd.Next(0, 2);
+
+                        switch (shape)
+                        {
+                            case 0:
+                                //triangle
+                                arr[rX, rY] = "triangle";
+                                break;
+                            case 1:
+                                //circle
+                                arr[rX, rY] = "circle";
+                                break;
+
+                        }
+                    }
+
+                    else
+                    {
+                        switch (shape)
+                        {
+                            case 0:
+                                //triangle
+                                arr[rX, rY] = "triangle";
+                                break;
+                            case 1:
+                                //circle
+                                arr[rX, rY] = "circle";
+                                break;
+                            case 2:
+                                //square
+                                arr[rX, rY] = "square";
+                                break;
+                        }
+                    }
                 arrint[rX, rY] = 1;
 
             }
 
-        } }
+        }
+        
+        }
 
 
 
@@ -561,7 +690,7 @@ namespace ooplab1
         Queue<queueNode> road = new Queue<queueNode>();
         // check whether given cell (row, col)
         // is a valid cell or not.
-        bool isValid(int row, int col)
+        bool isValids(int row, int col)
         {
             // return true if row number and
             // column number is in range
@@ -623,7 +752,7 @@ namespace ooplab1
 
                     // if adjacent cell is valid, has path
                     // and not visited yet, enqueue it.
-                    if (isValid(row, col) &&
+                    if (isValids(row, col) &&
                             mat[row, col] == 0 &&
                        !visited[row, col])
                     {
@@ -739,11 +868,12 @@ btn = panel1.Controls[ase+1] as PictureBox;
                 Application.DoEvents();
 
             }
+            /*
             arrint[road.ElementAt(0).pt.X, road.ElementAt(0).pt.Y] = 0;
             arr[road.ElementAt(0).pt.X, road.ElementAt(0).pt.Y] = "0";
             arr[road.ElementAt(road.Count-1).pt.X, road.ElementAt(road.Count-1).pt.Y] = movShape;
             arrint[road.ElementAt(road.Count-1).pt.X, road.ElementAt(road.Count-1).pt.Y] = 1;
-
+            */
 
         }
 
@@ -853,6 +983,29 @@ btn = panel1.Controls[ase+1] as PictureBox;
 
         }
 
+        public void blockEvery()
+        {
+            //picturebox button
+            PictureBox btn = null;
+            
+
+            ///3d to 2d
+            for (int i = 0; i < x * y; i++)
+            {
+                
+
+                btn = panel1.Controls[i] as PictureBox;
+
+                    
+                        btn.Enabled = false;
+
+                       
+                        
+
+                }
+            }
+
+        
 
 
 
@@ -1072,21 +1225,17 @@ btn = panel1.Controls[ase+1] as PictureBox;
 
         }
 
-
-
-
-
-
-        
-
-
-
-
+        private void label14_Click(object sender, EventArgs e)
+        {
+            scorelist scorelist = new scorelist();
+            scorelist.Show();
+        }
 
         public void givePuan(int count)
         {
             int a = Int32.Parse(label10.Text);
-
+            System.Media.SoundPlayer pointSound = new System.Media.SoundPlayer("pointSound.wav");
+            pointSound.Play();
             switch (dif)
             {
                 case 3:
@@ -1106,7 +1255,144 @@ btn = panel1.Controls[ase+1] as PictureBox;
             label10.Text = a+"";
         }
 
+
+        ////////////////////////////////////////////
+        ///
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // ROW x COL matrix
+        public static int ROW, COL;
+
+        // Check if it is possible to go to (x, y) from current position.
+        public bool isSafe(int[,] matrix, int[,] visited, int x, int y)
+        {
+            // Returns false if the cell has value 0 or already visited
+            return !(matrix[x,y] == 1 || visited[x,y] != 0);
         }
+
+        // Check whether given cell (row, col) is a valid cell or not.
+        public bool isValid(int row, int col)
+        {
+            // Return true if row number and column number is in range
+            return (row >= 0) && (row < ROW) && (col >= 0) && (col < COL);
+        }
+
+        // Find Shortest Possible Route in the matrix from source cell (0, 0) to destination cell (x, y)
+
+        // 'min_dist' stores length of longest path from source to destination found so far
+        // and 'dist' maintains length of path from source cell to the current cell (i, j)
+        public int shortestPathBinaryMatrixHelper(int[,] matrix, int[,] visited, int i, int j, int x, int y, int min_dist, int dist)
+        {
+            // If destination is found, update min_dist
+            if (i == x && j == y)
+            {
+                if (dist < min_dist)
+                    return dist;
+                else
+                    return min_dist;
+            }
+
+            // Set (i, j) cell as visited
+            visited[i,j] = 1;
+
+            // Go to bottom cell
+            if (isValid(i + 1, j) && isSafe(matrix, visited, i + 1, j))
+            {
+                min_dist = shortestPathBinaryMatrixHelper(matrix, visited, i + 1, j, x, y, min_dist, dist + 1);
+            }
+
+            // Go to right cell
+            if (isValid(i, j + 1) && isSafe(matrix, visited, i, j + 1))
+            {
+                min_dist = shortestPathBinaryMatrixHelper(matrix, visited, i, j + 1, x, y, min_dist, dist + 1);
+            }
+
+            // Go to top cell
+            if (isValid(i - 1, j) && isSafe(matrix, visited, i - 1, j))
+            {
+                min_dist = shortestPathBinaryMatrixHelper(matrix, visited, i - 1, j, x, y, min_dist, dist + 1);
+            }
+
+            // Go to left cell
+            if (isValid(i, j - 1) && isSafe(matrix, visited, i, j - 1))
+            {
+                min_dist = shortestPathBinaryMatrixHelper(matrix, visited, i, j - 1, x, y, min_dist, dist + 1);
+            }
+
+            // Backtrack - Remove (i, j) from visited matrix
+            visited[i,j] = 0;
+
+            return min_dist;
+        }
+
+        public int shortestPathBinaryMatrix(int[,] matrix, Point src, Point dest)
+        {
+            ROW = matrix.GetLength(0);
+            COL = matrix.GetLength(1);
+
+            // Check source and destination cell of the matrix have value 1
+            if (matrix[src.X,src.Y] != 0 || matrix[dest.X,dest.Y] != 0)
+            {
+                return -1;
+            }
+
+            int[,] visited = new int[ROW,COL];
+            int min_dist = shortestPathBinaryMatrixHelper(matrix, visited, src.X, src.Y, dest.X, dest.Y, Int32.MaxValue, 0);
+
+            // If min_dist doesn't change
+            if (min_dist == Int32.MaxValue)
+            {
+                return -1;
+            }
+            return min_dist;
+        }
+
+
+
+
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 
         }
             

@@ -49,7 +49,7 @@ namespace ooplab1
 
 
 
-            userBases.Add(new UserBase() { username = textBox1.Text,password = SHA512(textBox2.Text), name=textBox3.Text, phone= textBox4.Text,address= textBox5.Text, city=textBox6.Text,country= textBox7.Text,email= textBox8.Text });
+            userBases.Add(new UserBase() { username = textBox1.Text, password = SHA512(textBox2.Text), name = textBox3.Text, phone = textBox4.Text, address = textBox5.Text, city = textBox6.Text, country = textBox7.Text, email = textBox8.Text, highscore = 0 }); ;
             using (FileStream fs = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Write)) { 
             
                 srl.Serialize(fs,userBases);

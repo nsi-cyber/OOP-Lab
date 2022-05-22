@@ -36,7 +36,7 @@ namespace ooplab1
             {
                 string[] lines = System.IO.File.ReadAllLines("settings.txt");
                 comboBox1.SelectedIndex = int.Parse(lines[0]);
-                comboBox2.SelectedIndex = int.Parse(lines[7]);
+                comboBox2.SelectedIndex = int.Parse(lines[6]);
                 if (lines[0] == "3")
                 {
                     dif = int.Parse(lines[0]);
@@ -47,12 +47,12 @@ namespace ooplab1
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                    hexagon = bool.Parse(lines[6]);
-                    color = int.Parse(lines[7]);
+                  
+                    color = int.Parse(lines[6]);
                     checkBox1.Checked = square;
                     checkBox2.Checked = triangle;
                     checkBox3.Checked = circle;
-                    checkBox4.Checked = hexagon;
+                   
                 }
                 else
                 {
@@ -76,12 +76,12 @@ namespace ooplab1
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                    hexagon = bool.Parse(lines[6]);
-                    color = int.Parse(lines[7]);
+                    
+                    color = int.Parse(lines[6]);
                     checkBox1.Checked = square;
                     checkBox2.Checked = triangle;
                     checkBox3.Checked = circle;
-                    checkBox4.Checked = hexagon;
+                   
                 }
                 if (dif == 3)
                 {
@@ -97,7 +97,7 @@ namespace ooplab1
 
         private void button6_Click(object sender, EventArgs e)
         {
-            if (checkBox1.Checked || checkBox2.Checked || checkBox3.Checked || checkBox4.Checked)
+            if (checkBox1.Checked || checkBox2.Checked || checkBox3.Checked )
             {
                 txt = new StreamWriter("settings.txt");
                 if (dif == 3)
@@ -112,10 +112,10 @@ namespace ooplab1
 
 
 
-                    txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked + System.Environment.NewLine + color);
+                    txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + color);
                 }
                 else
-                    txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine + checkBox4.Checked + System.Environment.NewLine + color);
+                    txt.Write(dif + System.Environment.NewLine + x + System.Environment.NewLine + y + System.Environment.NewLine + checkBox1.Checked + System.Environment.NewLine + checkBox2.Checked + System.Environment.NewLine + checkBox3.Checked + System.Environment.NewLine  + color);
             
             txt.Close();
                 label7.Show();
@@ -222,16 +222,10 @@ namespace ooplab1
         }
 
 
-        private void checkBox4_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox4.Checked)
-                hexagon = true;
-            else
-                hexagon = false;
-
+      
         }
 
 
 
     }
-}
+

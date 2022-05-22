@@ -16,6 +16,7 @@ namespace ooplab1
         public static string lastUser;
         List<UserBase> list = new List<UserBase>();
         XmlSerializer srl = new XmlSerializer(typeof(List<UserBase>));
+        int temp;
         public Panel()
         {
             InitializeComponent();
@@ -50,7 +51,7 @@ namespace ooplab1
             textBox6.Clear();
             textBox7.Clear();
             textBox8.Clear();
-
+            temp= list[listBox1.SelectedIndex].highscore;
             label1.Text=list[listBox1.SelectedIndex].username;
             textBox2.Text = list[listBox1.SelectedIndex].password;
             textBox3.Text = list[listBox1.SelectedIndex].name;
@@ -73,7 +74,7 @@ namespace ooplab1
            list[listBox1.SelectedIndex].city = textBox6.Text ;
           list[listBox1.SelectedIndex].country = textBox7.Text;
            list[listBox1.SelectedIndex].email = textBox8.Text;
-
+            list[listBox1.SelectedIndex].highscore = temp;
             using (FileStream fs = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Write))
             {
                 srl.Serialize(fs, list);
@@ -132,7 +133,7 @@ namespace ooplab1
 
         private void button4_Click(object sender, EventArgs e)
         {
-            list.Add(new UserBase() { username = textBox1.Text, password = SHA512(textBox2.Text), name = textBox3.Text, phone = textBox4.Text, address = textBox5.Text, city = textBox6.Text, country = textBox7.Text, email = textBox8.Text });
+            list.Add(new UserBase() { username = textBox1.Text, password = SHA512(textBox2.Text), name = textBox3.Text, phone = textBox4.Text, address = textBox5.Text, city = textBox6.Text, country = textBox7.Text, email = textBox8.Text, highscore = 0 }); ;
             using (FileStream fs = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Write))
             {
                 srl.Serialize(fs, list);
@@ -141,7 +142,10 @@ namespace ooplab1
             listBox1.DisplayMember = "username";
         }
 
-    
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }

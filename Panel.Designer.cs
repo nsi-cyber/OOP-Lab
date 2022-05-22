@@ -193,7 +193,6 @@
             this.Controls.Add(this.textBox1);
             this.Name = "Panel";
             this.Text = "Panel";
-           // this.Load += new System.EventHandler(this.Panel_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
