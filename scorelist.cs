@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -16,24 +17,23 @@ namespace ooplab1
         List<UserBase> list = new List<UserBase>();
         List<String> liste = new List<String>();
         XmlSerializer srl = new XmlSerializer(typeof(List<UserBase>));
+        SqlConnection con = new SqlConnection();
+
         public scorelist()
         {
             InitializeComponent();
-            using (FileStream fsr = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Read))
-            {
+            string asdasd = "Data Source=MSI;Integrated Security=True;Connect Timeout=30;Trusted_Connection=True;TrustServerCertificate=True;";
+            con = new SqlConnection(asdasd);
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select username, highscore from [OOPtable].[dbo].[Table_2] order by highscore",con);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
 
-                list = srl.Deserialize(fsr) as List<UserBase>;
-
-            }
-
-            for (int i = 0; i < list.Count; i++)
-            {
-                liste.Add(list[i].username + " - " + list[i].highscore);
-            }
+            con.Close();
 
 
-
-            listBox1.DataSource = liste;
+            dataGridView1.DataSource = dt;
             
 
 

@@ -5,7 +5,7 @@ downgrade to net 5
  */ using System;
 using System.Xml.Serialization;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
 
 
@@ -25,7 +25,7 @@ namespace ooplab1
         int x, y;
         int tempx, tempy;
         int color;
-        int actv;
+        String actv;
         bool isClicked=false;
         string movShape;
         public static string lastUser;
@@ -35,10 +35,15 @@ namespace ooplab1
         int[,] gameArrInt ;
         int thisuserscore;
         int highscore=0;
+       
+        SqlConnection con = new SqlConnection();
+       
         public Form1()
         {
 
             InitializeComponent();
+            string asdasd= "Data Source=MSI;Integrated Security=True;Connect Timeout=30;Trusted_Connection=True;TrustServerCertificate=True;";
+            con = new SqlConnection(asdasd);
             textBox1.Select();
             label3.Hide();
             label5.Hide();
@@ -47,11 +52,10 @@ namespace ooplab1
             System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"c:\mywavfile.wav");
             System.Media.SoundPlayer pointSound = new System.Media.SoundPlayer(@"c:\mywavfile.wav");
 
+            SqlCommand cmd = con.CreateCommand();
 
-            /*
-            SqlConnection con = new SqlConnection("Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = C:\Users\nsi\Documents\MSI.mdf; Integrated Security = True; Connect Timeout = 30");
-            SqlCommand cmd= con.CreateCommand();
-            */
+
+
 
 
 
@@ -70,8 +74,8 @@ namespace ooplab1
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                    hexagon = bool.Parse(lines[6]);
-                    color = int.Parse(lines[7]);
+                   
+                    color = int.Parse(lines[6]);
 
                 }
                 else
@@ -96,8 +100,8 @@ namespace ooplab1
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                    hexagon = bool.Parse(lines[6]);
-                    color = int.Parse(lines[7]);
+                  
+                    color = int.Parse(lines[6]);
 
                 }
              
@@ -106,7 +110,7 @@ namespace ooplab1
             gameArr = new string[x, y];
             gameArrInt = new int[x, y];
 
-
+            /*
             try
             {
                 using (FileStream fsr = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Read))
@@ -125,7 +129,7 @@ namespace ooplab1
                     srl.Serialize(fsw, list);
                 }
             }
-
+            */
             /*
 
             list.Add(new UserBase() { username = "admin", password = SHA512("admin") });
@@ -137,13 +141,25 @@ namespace ooplab1
             
               */
 
-
+            /*
             for (int i = 0; i < list.Count; i++)
             { 
                 if(highscore<list[i].highscore)
                     highscore = list[i].highscore;
             }
+            */
 
+            con.Open();
+             cmd = new SqlCommand("select highscore from [OOPtable].[dbo].[Table_2] order by highscore",con);
+            SqlDataReader r
+                = cmd.ExecuteReader();
+         
+            while (r.Read())
+            {
+               highscore= r.GetInt32(0);
+            }
+          
+            con.Close();
             label13.Text = "" + highscore;
 
             if (File.Exists("lastuser.txt"))
@@ -215,15 +231,15 @@ namespace ooplab1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            using (FileStream fsr = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Read))
+
+            /*
+                     using (FileStream fsr = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Read))
             {
 
                 list = srl.Deserialize(fsr) as List<UserBase>;
 
             }
-
-
-            bool a = true;
+              bool a = true;
             int i = 0;
             for (i = 0; i < list.Count; i++)
             {
@@ -255,6 +271,49 @@ namespace ooplab1
 
             }
 
+             
+             */
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select * from [OOPtable].[dbo].[Table_2] where username like '" +textBox1.Text+"'", con) ;
+            SqlDataReader r
+                   = cmd.ExecuteReader();
+            String asd="";
+            while (r.Read())
+            {
+
+
+
+
+                if (textBox2.Text == r["password"].ToString()&& textBox1.Text==r["username"].ToString())
+                {
+                    if (textBox1.Text == "admin")
+                    {
+
+                        isAdmin = true;
+                        label5.Show();
+
+                        label14.Show();
+
+
+                    }
+                    groupBox2.Show();
+                    lastUser = textBox1.Text;
+                    txtx = new StreamWriter("lastuser.txt");
+                    txtx.Write(lastUser);
+                    txtx.Close();
+                    actv = textBox1.Text;
+                    txtx = new StreamWriter("actv.txt");
+                    txtx.Write(actv);
+                    txtx.Close();
+                }
+                else label3.Show();
+            }
+
+            
+            
+            con.Close();
+           
+           
         }
 
 
@@ -406,10 +465,10 @@ namespace ooplab1
                 int d, e;
 
                 int aw, aws, sdd;
-
+                a = a.Remove(0, 3);
                 // using the method
-                String[] strlist = a.Split("btn");
-                int i = Int32.Parse(strlist[1]);
+             
+                int i = Int32.Parse(a);
                 ///3d to 2d
 
                 if (i < x)
@@ -469,6 +528,8 @@ namespace ooplab1
                     {
                         isClicked = true;
                         MessageBox.Show("cant go");
+                        gameArrInt[tempx, tempy] = 1;
+                        gameArr[tempx, tempy] = movShape;
                     }
                     else
                     {
@@ -492,24 +553,26 @@ namespace ooplab1
                 MessageBox.Show("Game End - Score: "+ label10.Text);
                 blockEvery();
                 thisuserscore = Int32.Parse(label10.Text);
-                //lookat
-                for (int i = 0; i < list.Count; i++)
-                {
-                    if (list[i].username == textBox1.Text) {
-                        list[i].highscore = thisuserscore;
-                    }
-                    using (FileStream fs = new FileStream(Environment.CurrentDirectory + "\\userData.xml", FileMode.Open, FileAccess.Write))
-                    {
-                        srl.Serialize(fs, list);
-                    }
+                con.Open();
+                SqlCommand cmd = new SqlCommand("select highscore from[OOPtable].[dbo].[Table_2] where username like @username;",con);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                cmd.Parameters.AddWithValue("@username", textBox1.Text);
+                DataTable dt = new DataTable();
+da.Fill(dt);
+                con.Close();
+                if(thisuserscore > Int32.Parse(dt.Rows[0][0].ToString())) {
+                    con.Open();
+                    cmd = new SqlCommand("UPDATE [OOPtable].[dbo].[Table_2] SET highscore=@highscore WHERE username like @username;",con);
+                    cmd.Parameters.AddWithValue("@highscore", thisuserscore);
+                    cmd.Parameters.AddWithValue("@username", textBox1.Text);
+
+                    cmd.ExecuteNonQuery();
+
+                    con.Close();
+
+
 
                 }
-
-
-
-
-
-
 
 
 
@@ -804,7 +867,7 @@ namespace ooplab1
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                    hexagon = bool.Parse(lines[6]);
+                   
                     color = int.Parse(lines[7]);
 
                 }
@@ -830,8 +893,8 @@ namespace ooplab1
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                    hexagon = bool.Parse(lines[6]);
-                    color = int.Parse(lines[7]);
+                   
+                    color = int.Parse(lines[6]);
 
                 }
 
@@ -839,6 +902,7 @@ namespace ooplab1
 
             gameArr = new string[x, y];
             gameArrInt = new int[x, y];
+            panel1.Controls.Clear();
             gameStart();
         }
 
@@ -1229,6 +1293,16 @@ btn = panel1.Controls[ase+1] as PictureBox;
         {
             scorelist scorelist = new scorelist();
             scorelist.Show();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label13_Click(object sender, EventArgs e)
+        {
+
         }
 
         public void givePuan(int count)

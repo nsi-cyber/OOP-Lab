@@ -38,6 +38,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -50,7 +51,6 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -58,6 +58,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(47, 144);
+            this.button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(94, 29);
             this.button1.TabIndex = 0;
@@ -95,6 +96,7 @@
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(17, 38);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(159, 27);
             this.textBox1.TabIndex = 4;
@@ -103,6 +105,7 @@
             // textBox2
             // 
             this.textBox2.Location = new System.Drawing.Point(17, 91);
+            this.textBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.textBox2.Name = "textBox2";
             this.textBox2.PasswordChar = '*';
             this.textBox2.Size = new System.Drawing.Size(159, 27);
@@ -119,7 +122,9 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(282, 59);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Size = new System.Drawing.Size(310, 181);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
@@ -127,6 +132,7 @@
             // button2
             // 
             this.button2.Location = new System.Drawing.Point(196, 36);
+            this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(94, 29);
             this.button2.TabIndex = 19;
@@ -138,6 +144,7 @@
             // 
             this.checkBox5.AutoSize = true;
             this.checkBox5.Location = new System.Drawing.Point(182, 94);
+            this.checkBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBox5.Name = "checkBox5";
             this.checkBox5.Size = new System.Drawing.Size(98, 24);
             this.checkBox5.TabIndex = 18;
@@ -161,12 +168,24 @@
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(3, 1);
+            this.groupBox2.Location = new System.Drawing.Point(2, 11);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Size = new System.Drawing.Size(782, 428);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Game Screen";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(660, 304);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(78, 20);
+            this.label14.TabIndex = 16;
+            this.label14.Text = "List Scores";
+            this.label14.Click += new System.EventHandler(this.label14_Click);
             // 
             // label13
             // 
@@ -176,6 +195,7 @@
             this.label13.Size = new System.Drawing.Size(17, 20);
             this.label13.TabIndex = 15;
             this.label13.Text = "0";
+            this.label13.Click += new System.EventHandler(this.label13_Click);
             // 
             // label12
             // 
@@ -189,7 +209,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(675, 177);
+            this.label11.Location = new System.Drawing.Point(675, 178);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(41, 20);
             this.label11.TabIndex = 13;
@@ -199,6 +219,7 @@
             // button3
             // 
             this.button3.Location = new System.Drawing.Point(651, 200);
+            this.button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(94, 29);
             this.button3.TabIndex = 12;
@@ -226,9 +247,10 @@
             // 
             // panel1
             // 
-            this.panel1.Location = new System.Drawing.Point(6, 23);
+            this.panel1.Location = new System.Drawing.Point(6, 22);
+            this.panel1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(639, 387);
+            this.panel1.Size = new System.Drawing.Size(639, 388);
             this.panel1.TabIndex = 9;
             // 
             // label7
@@ -264,7 +286,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(672, 23);
+            this.label9.Location = new System.Drawing.Point(672, 22);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(51, 20);
             this.label9.TabIndex = 2;
@@ -280,16 +302,6 @@
             this.label4.Text = "Settings";
             this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(660, 304);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(78, 20);
-            this.label14.TabIndex = 16;
-            this.label14.Text = "List Scores";
-            this.label14.Click += new System.EventHandler(this.label14_Click);
-            // 
             // Form1
             // 
             this.AcceptButton = this.button1;
@@ -298,8 +310,10 @@
             this.ClientSize = new System.Drawing.Size(785, 428);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
