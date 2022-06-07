@@ -31,7 +31,6 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -49,7 +48,6 @@
             // 
             this.groupBox3.Controls.Add(this.comboBox2);
             this.groupBox3.Controls.Add(this.label8);
-            this.groupBox3.Controls.Add(this.checkBox4);
             this.groupBox3.Controls.Add(this.checkBox3);
             this.groupBox3.Controls.Add(this.checkBox2);
             this.groupBox3.Controls.Add(this.checkBox1);
@@ -88,16 +86,6 @@
             this.label8.Size = new System.Drawing.Size(150, 20);
             this.label8.TabIndex = 15;
             this.label8.Text = "select atleast a shape";
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(17, 243);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(91, 24);
-            this.checkBox4.TabIndex = 14;
-            this.checkBox4.Text = "Hexagon";
-            this.checkBox4.UseVisualStyleBackColor = true;
             // 
             // checkBox3
             // 
@@ -216,7 +204,6 @@
         private GroupBox groupBox3;
         private ComboBox comboBox2;
         private Label label8;
-        private CheckBox checkBox4;
         private CheckBox checkBox3;
         private CheckBox checkBox2;
         private CheckBox checkBox1;

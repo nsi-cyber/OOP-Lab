@@ -15,7 +15,9 @@
         public String address { get; set; }
         public String city { get; set; }
         public string country { get; set; }
-        
-     
+
+        public int highscore { get; set; }
+
+
     }
 }
