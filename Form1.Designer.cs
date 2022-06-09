@@ -35,9 +35,15 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button7 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button6 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.label15 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -113,6 +119,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.checkBox5);
             this.groupBox1.Controls.Add(this.textBox2);
@@ -128,6 +135,16 @@
             this.groupBox1.Size = new System.Drawing.Size(310, 181);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(190, 144);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(114, 29);
+            this.button7.TabIndex = 20;
+            this.button7.Text = "Login Online";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
             // 
             // button2
             // 
@@ -155,6 +172,11 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button6);
+            this.groupBox2.Controls.Add(this.button5);
+            this.groupBox2.Controls.Add(this.label15);
+            this.groupBox2.Controls.Add(this.button4);
+            this.groupBox2.Controls.Add(this.textBox3);
             this.groupBox2.Controls.Add(this.label14);
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.label12);
@@ -168,14 +190,60 @@
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(2, 11);
+            this.groupBox2.Location = new System.Drawing.Point(12, 11);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(782, 428);
+            this.groupBox2.Size = new System.Drawing.Size(868, 458);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Game Screen";
+            // 
+            // button6
+            // 
+            this.button6.Location = new System.Drawing.Point(708, 429);
+            this.button6.Name = "button6";
+            this.button6.Size = new System.Drawing.Size(94, 29);
+            this.button6.TabIndex = 8;
+            this.button6.Text = "Start online game";
+            this.button6.UseVisualStyleBackColor = true;
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(658, 399);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(94, 29);
+            this.button5.TabIndex = 20;
+            this.button5.Text = "Start Server";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(665, 343);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(128, 20);
+            this.label15.TabIndex = 19;
+            this.label15.Text = "IP for Multi-Player";
+            // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(756, 399);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(78, 29);
+            this.button4.TabIndex = 18;
+            this.button4.Text = "Connect";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(660, 366);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(174, 27);
+            this.textBox3.TabIndex = 17;
+            this.textBox3.Tag = "";
             // 
             // label14
             // 
@@ -307,7 +375,7 @@
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(785, 428);
+            this.ClientSize = new System.Drawing.Size(882, 480);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -347,5 +415,11 @@
         private Label label13;
         private Label label12;
         private Label label14;
+        private Label label15;
+        private Button button4;
+        private TextBox textBox3;
+        private Button button5;
+        private Button button6;
+        private Button button7;
     }
 }

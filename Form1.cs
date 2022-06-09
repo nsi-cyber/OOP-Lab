@@ -7,15 +7,29 @@ using System.Xml.Serialization;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Threading.Tasks;
-
-
-
+using System.Net.Sockets;
+using System.Text;
+using System.Net;
+using System;
+using System.Net.Sockets;
+using System.Net;
+using System.Text;
 
 namespace ooplab1
 {
     public partial class Form1 : Form
     {
+        private static readonly Socket ClientSocket = new Socket
+         (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        Socket clientSocket;
+        private const int PORT = 100;
         double OpacityPercentage = 0.3;
+        IPHostEntry ipHost;
+        IPAddress ipAddr;
+        IPEndPoint localEndPoint;
+
+        Socket senderr;
+
         bool isAdmin = false;
         String[] usr = { "user", "admin" };
         String[] pass = { "user", "admin" };
@@ -26,23 +40,23 @@ namespace ooplab1
         int tempx, tempy;
         int color;
         String actv;
-        bool isClicked=false;
+        bool isClicked = false;
         string movShape;
         public static string lastUser;
         List<UserBase> list = new List<UserBase>();
         XmlSerializer srl = new XmlSerializer(typeof(List<UserBase>));
         string[,] gameArr;
-        int[,] gameArrInt ;
+        int[,] gameArrInt;
         int thisuserscore;
-        int highscore=0;
-       
+        int highscore = 0;
+
         SqlConnection con = new SqlConnection();
-       
+
         public Form1()
         {
 
             InitializeComponent();
-            string asdasd= "Data Source=MSI;Integrated Security=True;Connect Timeout=30;Trusted_Connection=True;TrustServerCertificate=True;";
+            string asdasd = "Data Source=MSI;Integrated Security=True;Connect Timeout=30;Trusted_Connection=True;TrustServerCertificate=True;";
             con = new SqlConnection(asdasd);
             textBox1.Select();
             label3.Hide();
@@ -74,7 +88,7 @@ namespace ooplab1
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                   
+
                     color = int.Parse(lines[6]);
 
                 }
@@ -100,11 +114,11 @@ namespace ooplab1
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                  
+
                     color = int.Parse(lines[6]);
 
                 }
-             
+
             }
 
             gameArr = new string[x, y];
@@ -150,15 +164,15 @@ namespace ooplab1
             */
 
             con.Open();
-             cmd = new SqlCommand("select highscore from [OOPtable].[dbo].[Table_2] order by highscore",con);
+            cmd = new SqlCommand("select highscore from [OOPtable].[dbo].[Table_2] order by highscore", con);
             SqlDataReader r
                 = cmd.ExecuteReader();
-         
+
             while (r.Read())
             {
-               highscore= r.GetInt32(0);
+                highscore = r.GetInt32(0);
             }
-          
+
             con.Close();
             label13.Text = "" + highscore;
 
@@ -169,7 +183,7 @@ namespace ooplab1
             }
             //oyunstart
             gameStart();
-            
+
         }
 
         public void gameStart()
@@ -274,17 +288,17 @@ namespace ooplab1
              
              */
             con.Open();
-            SqlCommand cmd = new SqlCommand("select * from [OOPtable].[dbo].[Table_2] where username like '" +textBox1.Text+"'", con) ;
+            SqlCommand cmd = new SqlCommand("select * from [OOPtable].[dbo].[Table_2] where username like '" + textBox1.Text + "'", con);
             SqlDataReader r
                    = cmd.ExecuteReader();
-            String asd="";
+            String asd = "";
             while (r.Read())
             {
 
 
 
-
-                if (textBox2.Text == r["password"].ToString()&& textBox1.Text==r["username"].ToString())
+                if (SHA512(textBox2.Text) == r["password"].ToString() && textBox1.Text == r["username"].ToString())
+                //if (textBox2.Text == r["password"].ToString()&& textBox1.Text==r["username"].ToString())
                 {
                     if (textBox1.Text == "admin")
                     {
@@ -309,11 +323,11 @@ namespace ooplab1
                 else label3.Show();
             }
 
-            
-            
+
+
             con.Close();
-           
-           
+
+
         }
 
 
@@ -467,7 +481,7 @@ namespace ooplab1
                 int aw, aws, sdd;
                 a = a.Remove(0, 3);
                 // using the method
-             
+
                 int i = Int32.Parse(a);
                 ///3d to 2d
 
@@ -485,26 +499,26 @@ namespace ooplab1
                     sdd++;
 
 
-                if(sdd==tempx&&aw==tempy)
+                if (sdd == tempx && aw == tempy)
                 {
                     isClicked = false;
- gameArrInt[tempx, tempy] = 1;
+                    gameArrInt[tempx, tempy] = 1;
                     clickBlock(gameArrInt);
-                    tempx = x+1; tempy=y+1;
+                    tempx = x + 1; tempy = y + 1;
                     movShape = "";
                 }
 
 
                 else if (isClicked == false)
                 {
-                    
 
 
 
 
 
 
-                        movShape = gameArr[sdd, aw];
+
+                    movShape = gameArr[sdd, aw];
                     clickOpen(x * y, gameArrInt);
                     btn.Enabled = true;
                     isClicked = true;
@@ -515,7 +529,7 @@ namespace ooplab1
                 else
                 {
                     isClicked = false;
-                    
+
 
 
 
@@ -537,12 +551,12 @@ namespace ooplab1
                         moveSound.Play();
                         gameArr[sdd, aw] = movShape;
                         gameArrInt[sdd, aw] = 1;
-                      // ShowAns(gameArr, gameArrInt);
+                        // ShowAns(gameArr, gameArrInt);
                         puanCheck(sdd, aw);
-                        
+
                         randomYerlestir(gameArr, gameArrInt);
                         nextMap(x * y, gameArr);
-                        clickBlock( gameArrInt);
+                        clickBlock(gameArrInt);
                     }
                 }
 
@@ -550,19 +564,19 @@ namespace ooplab1
             }
 
             if (!yerVar(gameArrInt)) {
-                MessageBox.Show("Game End - Score: "+ label10.Text);
+                MessageBox.Show("Game End - Score: " + label10.Text);
                 blockEvery();
                 thisuserscore = Int32.Parse(label10.Text);
                 con.Open();
-                SqlCommand cmd = new SqlCommand("select highscore from[OOPtable].[dbo].[Table_2] where username like @username;",con);
+                SqlCommand cmd = new SqlCommand("select highscore from[OOPtable].[dbo].[Table_2] where username like @username;", con);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 cmd.Parameters.AddWithValue("@username", textBox1.Text);
                 DataTable dt = new DataTable();
-da.Fill(dt);
+                da.Fill(dt);
                 con.Close();
-                if(thisuserscore > Int32.Parse(dt.Rows[0][0].ToString())) {
+                if (thisuserscore > Int32.Parse(dt.Rows[0][0].ToString())) {
                     con.Open();
-                    cmd = new SqlCommand("UPDATE [OOPtable].[dbo].[Table_2] SET highscore=@highscore WHERE username like @username;",con);
+                    cmd = new SqlCommand("UPDATE [OOPtable].[dbo].[Table_2] SET highscore=@highscore WHERE username like @username;", con);
                     cmd.Parameters.AddWithValue("@highscore", thisuserscore);
                     cmd.Parameters.AddWithValue("@username", textBox1.Text);
 
@@ -593,9 +607,9 @@ da.Fill(dt);
             string a;
             int rX;
             int rY;
-            int shape; 
+            int shape;
             Random rnd = new Random();
-            if(yerVar(arrint)){
+            if (yerVar(arrint)) {
 
                 for (int i = 0; i < 3; i++)
                 {
@@ -632,14 +646,14 @@ da.Fill(dt);
                                 //circle
                                 arr[rX, rY] = "circle";
                                 break;
-                            
+
                         }
 
 
 
 
                     }
-                      
+
                     else if (square && triangle && !circle) {
                         shape = rnd.Next(0, 2);
 
@@ -692,12 +706,12 @@ da.Fill(dt);
                                 break;
                         }
                     }
-                arrint[rX, rY] = 1;
+                    arrint[rX, rY] = 1;
+
+                }
 
             }
 
-        }
-        
         }
 
 
@@ -768,8 +782,8 @@ da.Fill(dt);
 
         // function to find the shortest path between
         // a given source cell to a destination cell.
-         int BFS(int[,] mat, Point src,
-                                   Point dest)
+        int BFS(int[,] mat, Point src,
+                                  Point dest)
         {
             // check source and destination cell
             // of the matrix have value 1
@@ -781,7 +795,7 @@ da.Fill(dt);
 
             // Mark the source cell as visited
             visited[src.X, src.Y] = true;
-            road= new Queue<queueNode>();
+            road = new Queue<queueNode>();
             // Create a queue for BFS
             Queue<queueNode> q = new Queue<queueNode>();
             //queue olustur ve onun elemanlari cek
@@ -867,7 +881,7 @@ da.Fill(dt);
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                   
+
                     color = int.Parse(lines[7]);
 
                 }
@@ -893,7 +907,7 @@ da.Fill(dt);
                     square = bool.Parse(lines[3]);
                     triangle = bool.Parse(lines[4]);
                     circle = bool.Parse(lines[5]);
-                   
+
                     color = int.Parse(lines[6]);
 
                 }
@@ -908,25 +922,25 @@ da.Fill(dt);
 
         private void label11_Click(object sender, EventArgs e)
         {
-           
-                help a = new help();
-                a.ShowDialog();
-           
+
+            help a = new help();
+            a.ShowDialog();
+
         }
 
-        public void ShowAns( string[,] arr, int[,] arrint)
+        public void ShowAns(string[,] arr, int[,] arrint)
         {//PictureBox
             PictureBox btn = null;
-            int ase,aw,aws,sdd= 0;
+            int ase, aw, aws, sdd = 0;
             for (int i = 0; i < road.Count; i++)
             {
-                
-
-              
 
 
-                    ase = road.ElementAt(i).pt.X+road.ElementAt(i).pt.Y*x;
-btn = panel1.Controls[ase+1] as PictureBox;
+
+
+
+                ase = road.ElementAt(i).pt.X + road.ElementAt(i).pt.Y * x;
+                btn = panel1.Controls[ase + 1] as PictureBox;
                 btn.BackColor = Color.Red;
                 Thread.Sleep(1000);
                 Application.DoEvents();
@@ -945,12 +959,12 @@ btn = panel1.Controls[ase+1] as PictureBox;
         public void nextMap(int size, string[,] arr)
         {//PictureBox
             PictureBox btn = null;
-            int ase,aw,sdd,aws,sdds = 0;
+            int ase, aw, sdd, aws, sdds = 0;
 
 
             ///3d to 2d
-            for (int i = 0; i < x*y; i++)
-            {if (i < x)
+            for (int i = 0; i < x * y; i++)
+            { if (i < x)
                     aw = 0;
                 else
                 {
@@ -959,14 +973,14 @@ btn = panel1.Controls[ase+1] as PictureBox;
                     if (aws == 0)
                         aw = aw - 1;
                 }
-                sdd = (i - aw * x)-1;
+                sdd = (i - aw * x) - 1;
                 if (sdd == -1)
                     sdd++;
                 //PictureBox
                 btn = panel1.Controls[i] as PictureBox;
 
                 btn.Image = new Bitmap(Image.FromFile(@"new\button.png"));
-                switch (arr[sdd,aw])
+                switch (arr[sdd, aw])
                 {
                     case "triangle":
                         btn.Image = new Bitmap(Image.FromFile(@"new\triangle.jpg"));
@@ -986,14 +1000,14 @@ btn = panel1.Controls[ase+1] as PictureBox;
 
         }
 
-     
 
-        public void clickBlock( int[,] arrint)
+
+        public void clickBlock(int[,] arrint)
         {
             //picturebox button
             PictureBox btn = null;
             int ase = 0;
-            int a, b, c,aw,aws,sdd;
+            int a, b, c, aw, aws, sdd;
 
             ///3d to 2d
             for (int i = 0; i < x * y; i++)
@@ -1013,14 +1027,14 @@ btn = panel1.Controls[ase+1] as PictureBox;
 
                 btn = panel1.Controls[i] as PictureBox;
 
-         
+
                 switch (arrint[sdd, aw])
                 {
                     case 0:
                         btn.Enabled = false;
-                      
-                                btn.Image = new Bitmap(Image.FromFile(@"new\button.png"));
-                          
+
+                        btn.Image = new Bitmap(Image.FromFile(@"new\button.png"));
+
                         break;
                     case 1:
                         btn.Enabled = true;
@@ -1035,13 +1049,13 @@ btn = panel1.Controls[ase+1] as PictureBox;
                             case "square":
                                 btn.Image = new Bitmap(Image.FromFile(@"new\square.jpg"));
                                 break;
-                         
+
 
 
 
                         }
                         break;
-                   
+
                 }
             }
 
@@ -1051,25 +1065,25 @@ btn = panel1.Controls[ase+1] as PictureBox;
         {
             //picturebox button
             PictureBox btn = null;
-            
+
 
             ///3d to 2d
             for (int i = 0; i < x * y; i++)
             {
-                
+
 
                 btn = panel1.Controls[i] as PictureBox;
 
-                    
-                        btn.Enabled = false;
 
-                       
-                        
+                btn.Enabled = false;
 
-                }
+
+
+
             }
+        }
 
-        
+
 
 
 
@@ -1096,7 +1110,7 @@ btn = panel1.Controls[ase+1] as PictureBox;
                     sdd++;
 
                 btn = panel1.Controls[i] as PictureBox;
-                
+
 
                 switch (arrint[sdd, aw])
                 {
@@ -1113,7 +1127,7 @@ btn = panel1.Controls[ase+1] as PictureBox;
                             case "square":
                                 btn.Image = new Bitmap(Image.FromFile(@"new\square.png"));
                                 break;
-                         
+
 
 
 
@@ -1198,12 +1212,12 @@ btn = panel1.Controls[ase+1] as PictureBox;
 
         */
 
-        public void puanCheck(int a,int b)
+        public void puanCheck(int a, int b)
         {
             int temx = a;
             int temy = b;
             int count = 1;
-            string obj=gameArr[temx, temy];
+            string obj = gameArr[temx, temy];
             //check right
             while (temx + 1 < gameArr.GetLength(0) && obj == gameArr[temx + 1, temy])
             {
@@ -1243,43 +1257,43 @@ btn = panel1.Controls[ase+1] as PictureBox;
                 btn.Enabled = false;
                 btn.Image = new Bitmap(Image.FromFile(@"new\button.png"));
             }
-                count = 1;
-                //check up
-                while (temy + 1 < gameArr.GetLength(1) && obj == gameArr[temx, temy + 1])
-                {
-                    count++;
-                    temy++;
-                }
-                temy = b;
-                //check down
-                while (temy - 1 >= 0 && obj == gameArr[temx, temy - 1])
-                {
-                    count++;
-                    temy--;
-                }
-                temy = b;
-            
-                if(count >= 5)
-                {
+            count = 1;
+            //check up
+            while (temy + 1 < gameArr.GetLength(1) && obj == gameArr[temx, temy + 1])
+            {
+                count++;
+                temy++;
+            }
+            temy = b;
+            //check down
+            while (temy - 1 >= 0 && obj == gameArr[temx, temy - 1])
+            {
+                count++;
+                temy--;
+            }
+            temy = b;
+
+            if (count >= 5)
+            {
                 givePuan(count);
                 //delete up
                 while (temy + 1 < gameArr.GetLength(1) && obj == gameArr[temx, temy + 1])
-                    {
-                        gameArr[temx, temy + 1] = "0";
-                        gameArrInt[temx, temy + 1] = 0;
-                        temy++;
-                    }
-                    temy = b;
-                    //delete down
-                    while (temy - 1 >= 0 && obj == gameArr[temx, temy - 1])
-                    {
-                        gameArr[temx, temy - 1] = "0";
-                        gameArrInt[temx, temy - 1] = 0;
-                        temy--;
-                    }
+                {
+                    gameArr[temx, temy + 1] = "0";
+                    gameArrInt[temx, temy + 1] = 0;
+                    temy++;
+                }
+                temy = b;
+                //delete down
+                while (temy - 1 >= 0 && obj == gameArr[temx, temy - 1])
+                {
+                    gameArr[temx, temy - 1] = "0";
+                    gameArrInt[temx, temy - 1] = 0;
+                    temy--;
+                }
                 gameArr[a, b] = "0";
                 gameArrInt[a, b] = 0;
-                PictureBox btn = panel1.Controls[b*x+a] as PictureBox;
+                PictureBox btn = panel1.Controls[b * x + a] as PictureBox;
                 btn.Enabled = false;
                 btn.Image = new Bitmap(Image.FromFile(@"new\button.png"));
             }
@@ -1305,6 +1319,125 @@ btn = panel1.Controls[ase+1] as PictureBox;
 
         }
 
+      
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                // Establish the remote endpoint
+                // for the socket. This example
+                // uses port 11111 on the local
+                // computer.
+                ipHost = Dns.GetHostEntry(Dns.GetHostName());
+                ipAddr = ipHost.AddressList[0];
+                localEndPoint = new IPEndPoint(ipAddr, 11111);
+
+                // Creation TCP/IP Socket using
+                // Socket Class Constructor
+                senderr = new Socket(ipAddr.AddressFamily,
+                          SocketType.Stream, ProtocolType.Tcp);
+
+                try
+                {
+
+                    // Connect Socket to the remote
+                    // endpoint using method Connect()
+                    senderr.Connect(localEndPoint);
+
+                    // We print EndPoint information
+                    // that we are connected
+                    Console.WriteLine("Socket connected to -> {0} ",
+                                  senderr.RemoteEndPoint.ToString());
+                    readFromServer();
+                  
+
+                }
+                catch (Exception ea)
+                {
+                    Console.WriteLine("Unexpected exception : {0}", ea.ToString());
+                }
+            }
+            catch (Exception es)
+            {
+
+                Console.WriteLine(es.ToString());
+            }
+
+            MessageBox.Show("Connected");
+
+        }
+        public void closeSocket() {
+            // Close Socket using
+            // the method Close()
+            senderr.Shutdown(SocketShutdown.Both);
+            senderr.Close();
+
+        }
+
+
+
+
+
+
+        public byte[] TwoToByte(string[,] DataValue) {
+            const int PIPEDELIMETER = 124;
+            List<byte> ListOfBytes = new List<byte>();
+
+            // Adding metadata - dimension of the first index. Plus the delimiter.
+            ListOfBytes.Add(Convert.ToByte(DataValue.GetUpperBound(0) + 1));
+            ListOfBytes.Add(PIPEDELIMETER);
+
+            // Adding metadata - dimension of the second index. Plus the delimiter.
+            ListOfBytes.Add(Convert.ToByte(DataValue.GetUpperBound(1) + 1));
+            ListOfBytes.Add(PIPEDELIMETER);
+
+            for (int i = 0; i <= DataValue.GetUpperBound(0); i++)
+            {
+                for (int j = 0; j <= DataValue.GetUpperBound(1); j++)
+                {
+                    // Add the string as bytes in ListOfBytes.
+                    ListOfBytes.AddRange(Encoding.ASCII.GetBytes(DataValue[i, j]));
+
+                    // Add the delimiter
+                    ListOfBytes.Add(PIPEDELIMETER);
+                }
+            }
+
+            byte[] Bytes = ListOfBytes.ToArray();
+            return Bytes;
+        }
+
+        public string[,] ByteToTwo(byte[] Bytes)
+        { /*Reconstruction*/
+            int FirstDimensionCount = Bytes[0]; // First dimension from metadata.
+            int SecondDimensionCount = Bytes[2]; // Second dimension from metadata.
+
+            // String array to hold the reconstructed data.
+            string[,] DataValueConvertedBack = new string[FirstDimensionCount, SecondDimensionCount];
+            int BytesCount = 4; // Data starts from the 4-th index.
+
+            // Get the entire bytes array into character array.
+            char[] CharsFromBytes = Encoding.UTF8.GetString(Bytes).ToCharArray();
+
+            StringBuilder SBuilder = new StringBuilder();
+            for (int i = 0; i < FirstDimensionCount; i++)
+            {
+                for (int j = 0; j < SecondDimensionCount; j++)
+                {
+                    while (CharsFromBytes[BytesCount] != '|')
+                        SBuilder.Append(CharsFromBytes[BytesCount++]); // Build the string character by character.
+                    DataValueConvertedBack[i, j] = SBuilder.ToString(); // Add the string to the specified string array index.
+                    BytesCount++;   // Increase the bytes pointer as it is currently pointing to the pipe
+                    SBuilder.Clear();   // Clear out for the next operation.
+                }
+            }
+
+            // DataValueConvertedBack (receiver end) = DataValue (sending end) at this point.}
+            return DataValueConvertedBack;
+        }
+
         public void givePuan(int count)
         {
             int a = Int32.Parse(label10.Text);
@@ -1326,7 +1459,7 @@ btn = panel1.Controls[ase+1] as PictureBox;
                     break;
 
             }
-            label10.Text = a+"";
+            label10.Text = a + "";
         }
 
 
@@ -1361,7 +1494,7 @@ btn = panel1.Controls[ase+1] as PictureBox;
         public bool isSafe(int[,] matrix, int[,] visited, int x, int y)
         {
             // Returns false if the cell has value 0 or already visited
-            return !(matrix[x,y] == 1 || visited[x,y] != 0);
+            return !(matrix[x, y] == 1 || visited[x, y] != 0);
         }
 
         // Check whether given cell (row, col) is a valid cell or not.
@@ -1387,7 +1520,7 @@ btn = panel1.Controls[ase+1] as PictureBox;
             }
 
             // Set (i, j) cell as visited
-            visited[i,j] = 1;
+            visited[i, j] = 1;
 
             // Go to bottom cell
             if (isValid(i + 1, j) && isSafe(matrix, visited, i + 1, j))
@@ -1414,9 +1547,161 @@ btn = panel1.Controls[ase+1] as PictureBox;
             }
 
             // Backtrack - Remove (i, j) from visited matrix
-            visited[i,j] = 0;
+            visited[i, j] = 0;
 
             return min_dist;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            // Establish the local endpoint
+            // for the socket. Dns.GetHostName
+            // returns the name of the host
+            // running the application.
+            IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
+            IPAddress ipAddr = ipHost.AddressList[0];
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddr, 11111);
+
+            // Creation TCP/IP Socket using
+            // Socket Class Constructor
+            Socket listener = new Socket(ipAddr.AddressFamily,
+                         SocketType.Stream, ProtocolType.Tcp);
+            while (true)
+            {
+
+                Console.WriteLine("Waiting connection ... ");
+
+                // Suspend while waiting for
+                // incoming connection Using
+                // Accept() method the server
+                // will accept connection of client
+                clientSocket = listener.Accept();
+
+
+              
+
+            }
+            MessageBox.Show("wait for the connection");
+
+        }
+        public void readFromServer()
+        {
+            // Data buffer
+            byte[] messageReceived = new byte[1024];
+
+            // We receive the message using
+            // the method Receive(). This
+            // method returns number of bytes
+            // received, that we'll use to
+            // convert them to string
+            int byteRecv = senderr.Receive(messageReceived);
+            Console.WriteLine("Message from Server -> {0}");
+            gameArr = ByteToTwo(messageReceived);
+            gameArrInt = toIntArr(gameArr);
+
+        }
+        public void writeToServer()
+        {          // Creation of message that
+                   // we will send to Server
+            byte[] messageSent = TwoToByte(gameArr);
+            int byteSent = senderr.Send(messageSent);
+
+
+        }
+
+        public void dataToClient()
+        {
+
+            byte[] message = TwoToByte(gameArr);
+
+            // Send a message to Client
+            // using Send() method
+            clientSocket.Send(message);
+
+
+        }
+
+        public void dataFromClient() {
+            // Data buffer
+            byte[] bytes = new Byte[1024];
+            string data = null;
+
+            while (true)
+            {
+
+                int numByte = clientSocket.Receive(bytes);
+
+                data += Encoding.ASCII.GetString(bytes,
+                                           0, numByte);
+
+                if (data.IndexOf("<EOF>") > -1)
+                    break;
+            }
+            gameArr = ByteToTwo(bytes);
+            gameArrInt = toIntArr(gameArr);
+            Console.WriteLine("Text received -> {0} ");
+        }
+
+        public int[,] toIntArr(string[,] asd) {
+            int[,] arr = new int[asd.GetLength(0), asd.GetLength(1)];
+            for (int i = 0; i < asd.GetLength(0); i++) { 
+                for (int j = 0; j < asd.GetLength(1); j++)
+                {
+                    if (asd[i, j].Length > 2)
+                        arr[i, j] = 1;
+                    else
+                        arr[i, j] = 0;
+                } 
+            }
+            
+            return arr;
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select * from [OOPtable].[dbo].[Table_2] where username like '" + textBox1.Text + "'", con);
+            SqlDataReader r
+                   = cmd.ExecuteReader();
+            String asd = "";
+            while (r.Read())
+            {
+
+
+
+                if (SHA512(textBox2.Text) == r["password"].ToString() && textBox1.Text == r["username"].ToString())
+                //if (textBox2.Text == r["password"].ToString()&& textBox1.Text==r["username"].ToString())
+                {
+                    if (textBox1.Text == "admin")
+                    {
+
+                        isAdmin = true;
+                        label5.Show();
+
+                        label14.Show();
+
+
+                    }
+
+                    onlineForm adsd = new onlineForm();
+                    adsd.Show();
+                    lastUser = textBox1.Text;
+                    txtx = new StreamWriter("lastuser.txt");
+                    txtx.Write(lastUser);
+                    txtx.Close();
+                    actv = textBox1.Text;
+                    txtx = new StreamWriter("actv.txt");
+                    txtx.Write(actv);
+                    txtx.Close();
+                }
+                else label3.Show();
+            }
+
+
+
+            con.Close();
+
         }
 
         public int shortestPathBinaryMatrix(int[,] matrix, Point src, Point dest)
@@ -1441,10 +1726,85 @@ btn = panel1.Controls[ase+1] as PictureBox;
             return min_dist;
         }
 
+        private static void ConnectToServer()
+        {
+            int attempts = 0;
+
+            while (!ClientSocket.Connected)
+            {
+                try
+                {
+                    attempts++;
+                    Console.WriteLine("Connection attempt " + attempts);
+                    // Change IPAddress.Loopback to a remote IP to connect to a remote host.
+                    ClientSocket.Connect(IPAddress.Loopback, PORT);
+                }
+                catch (SocketException)
+                {
+                    Console.Clear();
+                }
+            }
+
+            Console.Clear();
+            Console.WriteLine("Connected");
+        }
+
+        private static void RequestLoop()
+        {
+            Console.WriteLine(@"<Type ""exit"" to properly disconnect client>");
+
+            while (true)
+            {
+                SendRequest();
+                ReceiveResponse();
+            }
+        }
+
+        /// <summary>
+        /// Close socket and exit program.
+        /// </summary>
+        private static void Exit()
+        {
+            SendString("exit"); // Tell the server we are exiting
+            ClientSocket.Shutdown(SocketShutdown.Both);
+            ClientSocket.Close();
+            Environment.Exit(0);
+        }
+
+        private static void SendRequest()
+        {
+            Console.Write("Send a request: ");
+            string request = Console.ReadLine();
+            SendString(request);
+
+            if (request.ToLower() == "exit")
+            {
+                Exit();
+            }
+        }
+
+        /// <summary>
+        /// Sends a string to the server with ASCII encoding.
+        /// </summary>
+        private static void SendString(string text)
+        {
+            byte[] buffer = Encoding.ASCII.GetBytes(text);
+            ClientSocket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+        }
+
+        private static void ReceiveResponse()
+        {
+            var buffer = new byte[2048];
+            int received = ClientSocket.Receive(buffer, SocketFlags.None);
+            if (received == 0) return;
+            var data = new byte[received];
+            Array.Copy(buffer, data, received);
+            string text = Encoding.ASCII.GetString(data);
+            Console.WriteLine(text);
+        }
 
 
 
-       
 
 
 

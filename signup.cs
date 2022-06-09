@@ -46,7 +46,8 @@ namespace ooplab1
 
 
             cmd.Parameters.AddWithValue("@username", textBox1.Text);
-            cmd.Parameters.AddWithValue("@password", textBox2.Text);
+          //  cmd.Parameters.AddWithValue("@password", textBox2.Text);
+           cmd.Parameters.AddWithValue("@password", SHA512(textBox2.Text));
             cmd.Parameters.AddWithValue("@name", textBox3.Text);
             cmd.Parameters.AddWithValue("@email", textBox8.Text);
             cmd.Parameters.AddWithValue("@phone", textBox4.Text);
